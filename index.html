@@ -4,78 +4,141 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#123c35">
-<title>Domino Scorekeeper</title>
+<title>Dominoes & Spades Scorekeeper</title>
 <style>
-:root{--green:#123c35;--green2:#1d5a4d;--cream:#f7f4ec;--ink:#172522;--muted:#718078;--gold:#e7b85c;--red:#b94a42}
-*{box-sizing:border-box} body{margin:0;background:var(--cream);color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,sans-serif;min-height:100vh}
-header{background:var(--green);color:white;padding:25px 20px 28px;text-align:center;border-radius:0 0 26px 26px}
-.logo{font-size:12px;letter-spacing:3px;color:#c6d9d1;font-weight:800}.title{font-size:29px;font-weight:850;margin:5px 0}.subtitle{font-size:13px;color:#d5e2dc}
-main{max-width:760px;margin:0 auto;padding:20px 16px 40px}
-.panel{background:white;border-radius:18px;padding:18px;box-shadow:0 5px 20px #173a2d0c;margin-bottom:16px}
+:root{--green:#123c35;--green2:#1d5a4d;--cream:#f7f4ec;--ink:#172522;--muted:#718078;--gold:#e7b85c;--red:#b94a42;--line:#dce4df}
+*{box-sizing:border-box}body{margin:0;background:var(--cream);color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,sans-serif;min-height:100vh}
+header{background:var(--green);color:white;padding:23px 16px 25px;text-align:center;border-radius:0 0 26px 26px}
+.logo{font-size:11px;letter-spacing:3px;color:#c6d9d1;font-weight:800}.title{font-size:28px;font-weight:850;margin:5px 0}.subtitle{font-size:13px;color:#d5e2dc}
+main{max-width:850px;margin:0 auto;padding:18px 14px 40px}.panel{background:white;border-radius:18px;padding:17px;box-shadow:0 5px 20px #173a2d0c;margin-bottom:15px}
 .label{font-size:12px;font-weight:800;letter-spacing:1px;color:var(--muted);text-transform:uppercase;margin-bottom:10px}
-.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-input[type=text]{min-width:0;flex:1;padding:13px;border:1px solid #dce4df;border-radius:11px;font:inherit}
-select,button{font:inherit}
-select{padding:12px;border:1px solid #dce4df;border-radius:11px;background:white}
-button{border:0;border-radius:12px;padding:12px 16px;font-weight:750;cursor:pointer}
-.primary{background:var(--green2);color:white}.secondary{background:#edf2ef;color:var(--green)}.danger{background:#fff0ee;color:var(--red)}
-#players{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-.player{background:white;border-radius:18px;padding:16px;box-shadow:0 5px 20px #173a2d0c;border:2px solid transparent;position:relative;overflow:hidden}
-.player.winner{border-color:var(--gold);background:#fffaf0}
-.player-top{display:flex;justify-content:space-between;gap:8px;align-items:center}
-.player-name{font-weight:800;font-size:16px;overflow-wrap:anywhere}
-.score{font-size:42px;line-height:1.1;font-weight:850;letter-spacing:-2px;margin:17px 0 4px}
-.score small{font-size:13px;color:var(--muted);letter-spacing:0;font-weight:650}
-.progress{height:7px;border-radius:8px;background:#edf1ee;overflow:hidden;margin:13px 0}
-.progress span{display:block;height:100%;background:var(--green2);border-radius:8px;transition:width .2s}
-.winner .progress span{background:var(--gold)}
-.actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.add{background:var(--green);color:white;font-size:17px;padding:13px 8px}
-.undo{background:#edf2ef;color:#43534c;padding:13px 8px}
-.add:disabled,.undo:disabled{opacity:.35;cursor:not-allowed}
-.badge{font-size:10px;font-weight:900;letter-spacing:.8px;color:#88631f;background:#f7e9c7;padding:5px 8px;border-radius:20px}
-#status{text-align:center;font-weight:800;color:var(--green);padding:7px 0 14px;min-height:35px}
-#game{display:none} .setup-note{font-size:12px;color:var(--muted);margin-top:9px}
-footer{text-align:center;color:var(--muted);font-size:12px;padding:8px}
-@media(max-width:420px){#players{gap:9px}.player{padding:13px}.score{font-size:36px}.player-name{font-size:14px}.add,.undo{font-size:15px;padding:12px 5px}}
+.row{display:flex;gap:9px;align-items:center;flex-wrap:wrap}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+input[type=text],input[type=number],select{min-width:0;padding:12px;border:1px solid var(--line);border-radius:11px;font:inherit;background:white}
+input[type=text]{flex:1;width:100%}input[type=number]{width:90px}
+select{padding:12px}button{font:inherit;border:0;border-radius:11px;padding:11px 14px;font-weight:750;cursor:pointer}
+button:disabled{opacity:.38;cursor:not-allowed}.primary{background:var(--green2);color:white}.secondary{background:#edf2ef;color:var(--green)}.danger{background:#fff0ee;color:var(--red)}.gold{background:#f7e9c7;color:#765516}
+.nav{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px}.nav button{flex:1;min-width:90px}
+.view{display:none}.view.active{display:block}.note{font-size:12px;color:var(--muted);line-height:1.5;margin-top:8px}
+.player-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+.player-card{background:white;border-radius:17px;padding:14px;border:2px solid transparent;box-shadow:0 5px 20px #173a2d0c;min-width:0}
+.player-card.winner{border-color:var(--gold);background:#fffaf0}.player-head{display:flex;justify-content:space-between;align-items:center;gap:6px}
+.player-name{font-weight:850;overflow-wrap:anywhere}.score{font-size:38px;line-height:1.1;font-weight:850;letter-spacing:-2px;margin:13px 0 5px}
+.badge{font-size:10px;font-weight:900;letter-spacing:.7px;color:#88631f;background:#f7e9c7;padding:5px 8px;border-radius:20px}
+.progress{height:7px;border-radius:8px;background:#edf1ee;overflow:hidden;margin:11px 0}.progress span{display:block;height:100%;background:var(--green2);border-radius:8px}
+.actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.actions button{padding:11px 6px}
+.add{background:var(--green);color:white}.undo{background:#edf2ef;color:#43534c}
+.section-title{font-weight:850;font-size:18px;margin:2px 0 12px}.winner-box{text-align:center;padding:26px 16px;background:#fffaf0;border:2px solid var(--gold);border-radius:20px;margin-bottom:14px}
+.trophy{font-size:54px}.winner-name{font-size:27px;font-weight:900;color:var(--green);margin:5px}.winner-score{font-size:20px;font-weight:850}
+.result-list{display:grid;gap:8px}.result-row,.history-item{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:11px 12px;background:#f5f7f5;border-radius:11px}
+.history-item{align-items:flex-start}.history-item small{display:block;color:var(--muted);margin-top:3px}
+table{width:100%;border-collapse:collapse;font-size:14px}th,td{text-align:left;padding:9px 7px;border-bottom:1px solid #edf1ee}th{color:var(--muted);font-size:11px;text-transform:uppercase}
+.team-card{background:#f8faf8;border:1px solid var(--line);padding:13px;border-radius:14px;margin-bottom:10px}
+.team-card h3{margin:0 0 9px}.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.field label{display:block;font-size:12px;font-weight:750;color:var(--muted);margin-bottom:5px}
+.checkbox{display:flex;align-items:center;gap:7px;font-size:13px;font-weight:700;margin:8px 0}
+#toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#172522;color:white;padding:10px 15px;border-radius:12px;display:none;z-index:5}
+footer{text-align:center;color:var(--muted);font-size:12px;padding:10px}
+@media(max-width:480px){.player-grid,.grid{gap:8px}.player-card{padding:11px}.score{font-size:33px}.title{font-size:24px}.nav button{font-size:13px;padding:10px 7px}.form-grid{gap:7px}}
 </style>
 </head>
 <body>
-<header><div class="logo">GAME NIGHT • SCORE TRACKER</div><div class="title">Domino Scorekeeper</div><div class="subtitle">Tap to add points. First player to 150 wins.</div></header>
+<header><div class="logo">GAME NIGHT • SCORE TRACKER</div><div class="title">Dominoes & Spades</div><div class="subtitle">Scorekeeping, game history and tournament tracking</div></header>
 <main>
-<section id="setup" class="panel">
- <div class="label">Start a new game</div>
- <div class="row" style="margin-bottom:12px"><label for="count" style="font-weight:700">Players</label><select id="count"><option value="2">2 players</option><option value="3">3 players</option><option value="4">4 players</option></select></div>
- <div id="nameFields" style="display:grid;grid-template-columns:1fr 1fr;gap:9px"></div>
- <div class="row" style="margin-top:15px"><button class="primary" style="width:100%" id="start">Start game</button></div>
- <div class="setup-note">Each score tap adds 5 points. Undo removes the last 5 points for that player.</div>
+<nav class="nav" id="mainNav">
+<button class="primary" data-view="home">Home</button><button class="secondary" data-view="dominoSetup">Dominoes</button><button class="secondary" data-view="spadesSetup">Spades</button><button class="secondary" data-view="history">Game History</button><button class="secondary" data-view="tournament">Tournament</button>
+</nav>
+
+<section id="home" class="view active">
+ <div class="panel"><div class="section-title">Choose a score tracker</div><div class="grid">
+ <button class="primary" onclick="showView('dominoSetup')">🁣 Dominoes Scorekeeper</button>
+ <button class="primary" onclick="showView('spadesSetup')">♠ Spades Score Tracker</button>
+ <button class="secondary" onclick="showView('tournament')">🏆 Team Tournament</button>
+ <button class="secondary" onclick="showView('history')">📚 Game History</button>
+ </div><p class="note">Completed games are saved on this device. You can review or clear the history at any time.</p></div>
 </section>
-<section id="game">
- <div id="status" aria-live="polite">Game in progress</div>
- <div id="players"></div>
- <div class="panel" style="margin-top:16px">
-  <div class="row" style="justify-content:space-between"><div><div class="label" style="margin:0 0 4px">Game target</div><strong>150 points</strong></div><button class="secondary" id="newGame">New game</button></div>
- </div>
+
+<section id="dominoSetup" class="view">
+ <div class="panel"><div class="label">New dominoes game</div>
+ <div class="row" style="margin-bottom:12px"><label><b>Players</b></label><select id="dCount"><option>2</option><option>3</option><option>4</option></select><label><b>Winning score</b></label><input id="dGoal" type="number" min="5" max="500" value="150" style="width:100px"></div>
+ <div id="dNames" class="grid"></div><div class="row" style="margin-top:13px"><button class="primary" style="width:100%" onclick="startDomino()">Start dominoes game</button></div>
+ <p class="note">Each player can add 5 or 10 points, or undo 5 or 10 points. First player to the target wins. Losing players below 75 points are marked Snunk when the target is 150.</p></div>
 </section>
-<footer>Scores stay on this device while you play.</footer>
-</main>
+
+<section id="dominoGame" class="view">
+ <div class="nav"><button class="secondary" onclick="showView('dominoSetup')">New Game</button><button class="secondary" onclick="showView('history')">Game History</button><button class="secondary" onclick="showView('home')">Home</button></div>
+ <div id="dStatus" class="panel" style="text-align:center;font-weight:850;color:var(--green)">Game in progress</div><div id="dCards" class="player-grid"></div>
+ <div class="panel"><div class="row" style="justify-content:space-between"><div><div class="label">Game target</div><b id="dTargetLabel">150 points</b></div><button class="danger" onclick="confirmNew('domino')">End / New Game</button></div></div>
+</section>
+
+<section id="dominoWinner" class="view">
+ <div id="dWinnerContent"></div><div class="row"><button class="primary" onclick="rematchDomino()">↻ Rematch</button><button class="secondary" onclick="showView('dominoSetup')">New Game</button><button class="secondary" onclick="showView('home')">Home</button></div>
+</section>
+
+<section id="spadesSetup" class="view">
+ <div class="panel"><div class="label">New spades game</div>
+ <div class="row" style="margin-bottom:12px"><label><b>Format</b></label><select id="sFormat"><option value="players">Individual players (2–4)</option><option value="teams">2 teams</option></select><label><b>Players / teams</b></label><select id="sCount"><option>2</option><option>3</option><option>4</option></select></div>
+ <div class="row" style="margin-bottom:12px"><label><b>Winning score</b></label><input id="sGoal" type="number" min="50" max="2000" value="350"></div>
+ <div id="sNames" class="grid"></div><div class="row" style="margin-top:13px"><button class="primary" style="width:100%" onclick="startSpades()">Start spades game</button></div>
+ <p class="note">Default winning goal is 350. Each player or team enters a bid from 1–13, chooses Blind if applicable, and records books made from 0–13.</p></div>
+</section>
+
+<section id="spadesGame" class="view">
+ <div class="nav"><button class="secondary" onclick="showView('spadesSetup')">New Game</button><button class="secondary" onclick="showView('history')">Game History</button><button class="secondary" onclick="showView('home')">Home</button></div>
+ <div class="panel"><div class="row" style="justify-content:space-between"><div><div class="label">Winning score</div><b id="sTargetLabel">350</b></div><div><div class="label">Round</div><b id="sRoundLabel">1</b></div></div></div>
+ <div id="sCards"></div>
+ <div class="panel"><div class="label">Round controls</div><div class="row"><button class="primary" style="flex:1" onclick="submitSpadesRound()">Submit round scores</button><button class="secondary" style="flex:1" onclick="undoSpadesRound()" id="undoSpades">Undo last round</button></div><p class="note">Scoring: meeting or exceeding the bid earns bid × 10 × blind multiplier, plus overtricks (books made − bid). Falling short loses bid × 10 × blind multiplier.</p></div>
+</section>
+
+<section id="spadesWinner" class="view">
+ <div id="sWinnerContent"></div><div class="row"><button class="primary" onclick="rematchSpades()">↻ Rematch</button><button class="secondary" onclick="showView('spadesSetup')">New Game</button><button class="secondary" onclick="showView('home')">Home</button></div>
+</section>
+
+<section id="history" class="view">
+ <div class="panel"><div class="row" style="justify-content:space-between"><div><div class="label">Completed games</div><div class="section-title" style="margin:0">Game History</div></div><button class="danger" onclick="clearHistory()">Delete / Reset History</button></div>
+ <div id="historyList" style="margin-top:14px"></div><p class="note">History is stored in this browser on this device. Clearing history cannot be undone.</p></div>
+ <button class="secondary" onclick="showView('home')">Home</button>
+</section>
+
+<section id="tournament" class="view">
+ <div class="panel"><div class="label">Dominoes team tournament</div><div class="section-title">Tournament tracker</div>
+ <div class="row"><input type="text" id="tName" placeholder="Tournament name"><input type="number" id="tGoal" value="5" min="1" max="99" style="width:90px" title="Wins to clinch"></div>
+ <p class="note">Add team names and record a win after each completed team game. Standings are saved on this device.</p>
+ <div class="row" style="margin:12px 0"><input type="text" id="teamName" placeholder="Team name"><button class="primary" onclick="addTeam()">Add team</button></div>
+ <div id="teamStandings"></div>
+ <div class="row" style="margin-top:12px"><button class="secondary" onclick="resetTournament()">Reset tournament</button><button class="secondary" onclick="showView('home')">Home</button></div></div>
+</section>
+<footer>Local scorekeeper • Your games and history stay in this browser</footer>
+</main><div id="toast" role="status"></div>
 <script>
-const $=id=>document.getElementById(id); let players=[],history=[],finished=false;
-function fields(){const n=+$('count').value; $('nameFields').innerHTML='';for(let i=0;i<n;i++){const input=document.createElement('input');input.type='text';input.maxLength=22;input.placeholder=`Player ${i+1} name`;input.value=`Player ${i+1}`;input.id=`name${i}`;$('nameFields').append(input)}}
-$('count').addEventListener('change',fields); fields();
-$('start').onclick=()=>{const n=+$('count').value;players=Array.from({length:n},(_,i)=>({name:$(`name${i}`).value.trim()||`Player ${i+1}`,score:0}));history=[];finished=false;$('setup').style.display='none';$('game').style.display='block';render()};
-function change(i,delta){if(finished)return;if(delta>0){players[i].score=Math.min(150,players[i].score+5);history.push(i)}else{if(players[i].score<5)return;players[i].score-=5;const last=history.lastIndexOf(i);if(last>=0)history.splice(last,1)}
-if(players.some(p=>p.score>=150))finished=true;render()}
-function undoLast(i){if(finished)return;const last=history.lastIndexOf(i);if(last<0)return;history.splice(last,1);players[i].score=Math.max(0,players[i].score-5);render()}
-function render(){
-const winner=players.find(p=>p.score>=150);
-$('status').textContent=finished?`🏆 ${winner.name} wins! — It won’t hold anymore`:'Tap +5 to update a player’s score';
-$('players').innerHTML='';
-players.forEach((p,i)=>{const won=p.score>=150;const card=document.createElement('article');card.className='player'+(won?' winner':'');
-const snunk=finished&&!won&&p.score<75;
-card.innerHTML=`<div class="player-top"><div class="player-name"></div>${won?'<span class="badge">WINNER</span>':(snunk?'<span class="badge">SNUNK</span>':'')}</div>${snunk?'<div style="font-weight:900;color:#b94a42;font-size:13px;margin-top:8px">Snunk</div>':''}<button class="secondary edit-initials" style="margin-top:8px;padding:6px 9px;font-size:11px">Edit initials</button><div class="score">${p.score}<small> / 150</small></div><div class="progress"><span style="width:${p.score/150*100}%"></span></div><div class="actions" style="grid-template-columns:1fr"><button class="add" ${finished?'disabled':''}>+5 points</button><button class="undo" ${finished||p.score<5?'disabled':''}>Undo −5</button></div>`;
-card.querySelector('.player-name').textContent=p.name;card.querySelector('.edit-initials').onclick=()=>{const updated=prompt('Update player name or initials:',p.name);if(updated!==null&&updated.trim()){p.name=updated.trim().slice(0,22);render()}};card.querySelector('.add').onclick=()=>change(i,5);card.querySelector('.undo').onclick=()=>undoLast(i);$('players').append(card)});
-}
-$('newGame').onclick=()=>{if(confirm('Start a new game? Current scores will be cleared.')){$('game').style.display='none';$('setup').style.display='block';fields()}};
+const $=id=>document.getElementById(id);
+let domino=null,spades=null,spadesRoundUndo=null,tournament=JSON.parse(localStorage.getItem('dominoTournament')||'{"name":"","goal":5,"teams":[]}');
+let games=JSON.parse(localStorage.getItem('scoreGames')||'[]');
+function saveGames(){localStorage.setItem('scoreGames',JSON.stringify(games))}
+function showView(id){document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));$(id).classList.add('active');document.querySelectorAll('#mainNav button').forEach(b=>{b.className=b.dataset.view===id?'primary':'secondary'});if(id==='history')renderHistory();if(id==='tournament')renderTournament();window.scrollTo(0,0)}
+document.querySelectorAll('#mainNav button').forEach(b=>b.onclick=()=>showView(b.dataset.view));
+function buildNameInputs(container,count,prefix,defaults){$(container).innerHTML='';for(let i=0;i<count;i++){let x=document.createElement('input');x.type='text';x.maxLength=28;x.placeholder=defaults[i]||`Player ${i+1}`;x.value=defaults[i]||`Player ${i+1}`;x.id=prefix+i;$(container).append(x)}}
+$('dCount').onchange=()=>buildNameInputs('dNames',+$('dCount').value,'dn',[]);buildNameInputs('dNames',2,'dn',[]);
+$('sFormat').onchange=()=>{let team=$('sFormat').value==='teams';$('sCount').innerHTML=team?'<option value="2">2 teams</option>':'<option>2</option><option>3</option><option>4</option>';buildNameInputs('sNames',2,'sn',team?['Team 1','Team 2']:[])};$('sCount').onchange=()=>buildNameInputs('sNames',+$('sCount').value,'sn',[]);buildNameInputs('sNames',2,'sn',[]);
+function toast(msg){$('toast').textContent=msg;$('toast').style.display='block';setTimeout(()=>$('toast').style.display='none',2200)}
+function recordGame(type,entries,winner,goal){games.unshift({id:Date.now(),type,date:new Date().toLocaleString(),goal,winner,entries});saveGames()}
+function startDomino(){let n=+$('dCount').value,goal=Math.max(5,+$('dGoal').value||150);domino={goal,players:Array.from({length:n},(_,i)=>({name:$('dn'+i).value.trim()||`Player ${i+1}`,score:0}))};renderDomino();showView('dominoGame')}
+function renderDomino(){if(!domino)return;let w=domino.players.find(p=>p.score>=domino.goal);$('dTargetLabel').textContent=domino.goal+' points';$('dStatus').textContent='Tap +5, +10 or undo to update scores';$('dCards').innerHTML='';domino.players.forEach((p,i)=>{let won=p.score>=domino.goal,card=document.createElement('article');card.className='player-card'+(won?' winner':'');let snunk=!!w&&!won&&p.score<75;card.innerHTML=`<div class="player-head"><span class="player-name"></span>${won?'<span class="badge">WINNER</span>':snunk?'<span class="badge">SNUNK</span>':''}</div>${snunk?'<div style="color:#b94a42;font-weight:900">Snunk</div>':''}<button class="secondary edit" style="margin-top:7px;padding:6px 9px;font-size:11px">Edit name</button><div class="score">${p.score}<small> / ${domino.goal}</small></div><div class="progress"><span style="width:${Math.min(100,p.score/domino.goal*100)}%"></span></div><div class="actions"><button class="add" data-delta="5">+5</button><button class="add" data-delta="10">+10</button><button class="undo" data-delta="-5">Undo −5</button><button class="undo" data-delta="-10">Undo −10</button></div>`;card.querySelector('.player-name').textContent=p.name;card.querySelector('.edit').onclick=()=>{let v=prompt('Update player name:',p.name);if(v&&v.trim()){p.name=v.trim().slice(0,28);renderDomino()}};card.querySelectorAll('[data-delta]').forEach(b=>b.onclick=()=>{if(domino.players.some(x=>x.score>=domino.goal))return;let d=+b.dataset.delta;p.score=Math.max(0,p.score+d);let winner=domino.players.find(x=>x.score>=domino.goal);if(winner)finishDomino(winner);else renderDomino()});$('dCards').append(card)})}
+function finishDomino(winner){recordGame('Dominoes',domino.players.map(p=>({name:p.name,score:p.score})),winner.name,domino.goal);$('dWinnerContent').innerHTML=`<div class="winner-box"><div class="trophy">🏆</div><div class="label">Dominoes winner</div><div class="winner-name"></div><div class="winner-score">${winner.score} points</div><div style="font-weight:800;margin-top:7px">It won’t hold anymore!</div></div><div class="panel"><div class="section-title">Other players</div><div class="result-list" id="dLosers"></div></div>`;$('dWinnerContent').querySelector('.winner-name').textContent=winner.name;domino.players.filter(p=>p!==winner).forEach(p=>{let row=document.createElement('div');row.className='result-row';row.innerHTML=`<span></span><b>${p.score} points ${p.score<75&&domino.goal===150?'• SNUNK':''}</b>`;row.querySelector('span').textContent=p.name;$('dLosers').append(row)});showView('dominoWinner')}
+function rematchDomino(){if(!domino)return;domino.players.forEach(p=>p.score=0);renderDomino();showView('dominoGame')}
+function confirmNew(type){if(confirm('Start a new game? The current unfinished scores will be cleared.'))showView(type==='domino'?'dominoSetup':'spadesSetup')}
+function startSpades(){let n=+$('sCount').value,goal=Math.max(50,+$('sGoal').value||350),team=$('sFormat').value==='teams';spades={goal,round:1,format:team?'Teams':'Players',sides:Array.from({length:n},(_,i)=>({name:$('sn'+i).value.trim()||(team?`Team ${i+1}`:`Player ${i+1}`),score:0,bid:0,books:0,blind:false}))};renderSpades();showView('spadesGame')}
+function renderSpades(){if(!spades)return;$('undoSpades').disabled=!spadesRoundUndo;$('sTargetLabel').textContent=spades.goal+' points';$('sRoundLabel').textContent=spades.round;$('sCards').innerHTML='';spades.sides.forEach((p,i)=>{let box=document.createElement('div');box.className='panel';box.innerHTML=`<div class="row" style="justify-content:space-between"><div class="section-title sideName"></div><button class="secondary editName">Edit name</button></div><div class="score">${p.score}<small> points</small></div><div class="form-grid"><div class="field"><label>Bid (1–13)</label><input type="number" min="1" max="13" class="bid" value="${p.bid||''}" placeholder="Bid"></div><div class="field"><label>Books made (0–13)</label><input type="number" min="0" max="13" class="books" value="${p.books||''}" placeholder="Books"></div></div><label class="checkbox"><input type="checkbox" class="blind" ${p.blind?'checked':''}> Blind bid (doubles bid value)</label><div class="note">Blind multiplier: ${p.blind?2:1}×</div>`;box.querySelector('.sideName').textContent=p.name;box.querySelector('.editName').onclick=()=>{let v=prompt('Update player or team name:',p.name);if(v&&v.trim()){p.name=v.trim().slice(0,28);renderSpades()}};box.querySelector('.bid').onchange=e=>{let v=+e.target.value;if(v<1||v>13||!Number.isInteger(v)){toast('Bid must be from 1 to 13');e.target.value=p.bid||'';return}p.bid=v};box.querySelector('.books').onchange=e=>{let v=+e.target.value;if(v<0||v>13||!Number.isInteger(v)){toast('Books made must be from 0 to 13');e.target.value=p.books;return}p.books=v};box.querySelector('.blind').onchange=e=>p.blind=e.target.checked;$('sCards').append(box)})}
+function submitSpadesRound(){if(!spades)return;for(let p of spades.sides){if(!Number.isInteger(+p.bid)||p.bid<1||p.bid>13){toast('Enter a valid bid (1–13) for each player/team');return}if(!Number.isInteger(+p.books)||p.books<0||p.books>13){toast('Enter books made (0–13) for each player/team');return}}
+spadesRoundUndo=JSON.parse(JSON.stringify(spades));spades.sides.forEach(p=>{let multiplier=p.blind?2:1;if(p.bid<=p.books)p.score+=(p.bid*10*multiplier)+(p.books-p.bid);else p.score-=p.bid*10*multiplier});let winner=spades.sides.find(p=>p.score>=spades.goal);if(winner){recordGame('Spades',spades.sides.map(p=>({name:p.name,score:p.score})),winner.name,spades.goal);renderSpadesWinner(winner)}else{spades.round++;spades.sides.forEach(p=>{p.bid=0;p.books=0;p.blind=false});renderSpades();toast('Round scores added')}}
+function renderSpadesWinner(winner){$('sWinnerContent').innerHTML=`<div class="winner-box"><div class="trophy">🏆</div><div class="label">Spades winner</div><div class="winner-name"></div><div class="winner-score">${winner.score} points</div></div><div class="panel"><div class="section-title">Other players / teams</div><div id="sLosers" class="result-list"></div></div>`;$('sWinnerContent').querySelector('.winner-name').textContent=winner.name;spades.sides.filter(p=>p!==winner).forEach(p=>{let r=document.createElement('div');r.className='result-row';r.innerHTML='<span></span><b>'+p.score+' points</b>';r.querySelector('span').textContent=p.name;$('sLosers').append(r)});showView('spadesWinner')}
+function undoSpadesRound(){if(!spadesRoundUndo){toast('There is no round to undo');return}spades=JSON.parse(JSON.stringify(spadesRoundUndo));spadesRoundUndo=null;renderSpades();toast('Last round undone')}
+function rematchSpades(){if(!spades)return;spadesRoundUndo=null;spades.round=1;spades.sides.forEach(p=>{p.score=0;p.bid=0;p.books=0;p.blind=false});renderSpades();showView('spadesGame')}
+function renderHistory(){let el=$('historyList');el.innerHTML='';if(!games.length){el.innerHTML='<p class="note">No completed games yet.</p>';return}games.forEach(g=>{let item=document.createElement('div');item.className='history-item';let left=document.createElement('div');left.innerHTML=`<b>${g.type} • ${g.winner} won</b><small>${g.date} · Goal: ${g.goal}</small>`;let right=document.createElement('div');right.style.textAlign='right';right.innerHTML=g.entries.map(e=>`${escapeHtml(e.name)}: ${e.score}`).join('<br>');item.append(left,right);el.append(item)})}
+function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function clearHistory(){if(confirm('Permanently delete all completed game history?')){games=[];saveGames();renderHistory();toast('Game history cleared')}}
+function addTeam(){let name=$('teamName').value.trim();if(!name)return; if(tournament.teams.some(t=>t.name.toLowerCase()===name.toLowerCase())){toast('That team already exists');return}tournament.teams.push({name,wins:0,losses:0});$('teamName').value='';saveTournament();renderTournament()}
+function saveTournament(){localStorage.setItem('dominoTournament',JSON.stringify(tournament))}
+function renderTournament(){$('tName').value=tournament.name||'';$('tGoal').value=tournament.goal||5;$('teamStandings').innerHTML='';if(!tournament.teams.length){$('teamStandings').innerHTML='<p class="note">No teams added yet.</p>';return}let sorted=[...tournament.teams].sort((a,b)=>b.wins-a.wins);sorted.forEach(t=>{let d=document.createElement('div');d.className='team-card';d.innerHTML=`<div class="row" style="justify-content:space-between"><b></b><b>${t.wins} wins · ${t.losses} losses</b></div><div class="row" style="margin-top:9px"><button class="primary">Record win</button><button class="secondary">Record loss</button><button class="danger">Remove</button></div>`;d.querySelector('.row b').textContent=t.name;let bs=d.querySelectorAll('button');bs[0].onclick=()=>{t.wins++;saveTournament();renderTournament()};bs[1].onclick=()=>{t.losses++;saveTournament();renderTournament()};bs[2].onclick=()=>{if(confirm('Remove '+t.name+' from this tournament?')){tournament.teams=tournament.teams.filter(x=>x!==t);saveTournament();renderTournament()}};$('teamStandings').append(d)})}
+$('tName').onchange=()=>{tournament.name=$('tName').value;saveTournament()};$('tGoal').onchange=()=>{tournament.goal=Math.max(1,+$('tGoal').value||5);saveTournament();renderTournament()};
+function resetTournament(){if(confirm('Reset all tournament teams and standings?')){tournament={name:'',goal:5,teams:[]};saveTournament();renderTournament()}}
 </script>
 </body></html>
