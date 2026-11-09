@@ -95,7 +95,7 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:10px}
  <div class="nav"><button class="secondary" onclick="showView('spadesSetup')">New Game</button><button class="secondary" onclick="showView('history')">Game History</button><button class="secondary" onclick="showView('home')">Home</button></div>
  <div class="panel"><div class="row" style="justify-content:space-between"><div><div class="label">Winning score</div><b id="sTargetLabel">350</b></div><div><div class="label">Round</div><b id="sRoundLabel">1</b></div></div></div>
  <div id="sCards"></div>
- <div class="panel"><div class="label">Round controls</div><div class="row"><button class="primary" style="flex:1" onclick="submitSpadesRound()">Submit round scores</button><button class="secondary" style="flex:1" onclick="undoSpadesRound()" id="undoSpades">Undo last round</button></div><p class="note">The combined books made for all players/teams must equal 13 before a round can be submitted. If bid ≥ books made, add (bid × 10 × blind value) + books made − bid. If bid < books made, subtract bid × 10 × blind value. Use Edit bid to change a bid after entering it; Undo last round restores the previous round.</p></div>
+ <div class="panel"><div class="label">Round controls</div><div class="row"><button class="primary" style="flex:1" onclick="submitSpadesRound()">Submit round scores</button><button class="secondary" style="flex:1" onclick="undoSpadesRound()" id="undoSpades">Undo last round</button></div><p class="note">The combined books made for all players/teams must equal 13 before a round can be submitted. If books made ≥ bid, add (bid × 10 × blind value) + books made − bid. If books made < bid, subtract (bid × 10 × blind value). No scores change unless all players/teams total exactly 13 books. Use Edit bid to change a bid after entering it; Undo last round restores the previous round.</p></div>
 </section>
 
 <section id="spadesWinner" class="view">
@@ -170,19 +170,42 @@ function renderSpades(){
  $('sCards').append(summary);
  saveSession();
 }
+function calculateSpadesRoundPoints(side){
+ const lastBid=Number(side.bid);
+ const booksMade=Number(side.books);
+ const blindValue=side.blind===true?2:1;
+ // Books made equal to or greater than the bid: add bid points, adjusted by books made minus bid.
+ if(booksMade>=lastBid){
+  return (lastBid*10*blindValue)+booksMade-lastBid;
+ }
+ // Books made fewer than the bid: subtract the bid value, including the blind multiplier.
+ return -(lastBid*10*blindValue);
+}
 function submitSpadesRound(){
  if(!spades)return;
- for(let p of spades.sides){
-  if(!Number.isInteger(+p.bid)||p.bid<1||p.bid>13){toast('Enter a valid bid (1–13) for each player/team');return}
-  if(!Number.isInteger(+p.books)||p.books<0||p.books>13){toast('Enter books made (0–13) for each player/team');return}
+ // Validate every bid and book count before changing any team's score.
+ for(let i=0;i<spades.sides.length;i++){
+  const p=spades.sides[i];
+  const bid=Number(p.bid), books=Number(p.books);
+  if(!Number.isInteger(bid)||bid<1||bid>13){toast(`${p.name}: bid must be a whole number from 1 to 13`);return}
+  if(!Number.isInteger(books)||books<0||books>13){toast(`${p.name}: books made must be a whole number from 0 to 13`);return}
  }
- const totalBooks=spades.sides.reduce((sum,p)=>sum+(Number(p.books)||0),0);
- if(totalBooks!==13){toast(`Books made must total exactly 13. Current total: ${totalBooks}`);return}
+ // A round is not scored unless all players/teams account for exactly 13 books.
+ const totalBooks=spades.sides.reduce((sum,p)=>sum+Number(p.books),0);
+ if(totalBooks!==13){toast(`Round not submitted. All players/teams' books must total exactly 13. Current total: ${totalBooks} / 13`);return}
+ // Save the complete pre-round state so Undo restores every score and round entry.
  spadesRoundUndo=JSON.parse(JSON.stringify(spades));
- spades.sides.forEach(p=>{let multiplier=p.blind?2:1;if(p.bid>=p.books)p.score+=(p.bid*10*multiplier)+p.books-p.bid;else p.score-=p.bid*10*multiplier});
- let winner=spades.sides.find(p=>p.score>=spades.goal);
- if(winner){recordGame('Spades',spades.sides.map(p=>({name:p.name,score:p.score})),winner.name,spades.goal);renderSpadesWinner(winner)}
- else{spades.round++;spades.sides.forEach(p=>{p.bid=0;p.books=0;p.blind=false});renderSpades();toast('Round scores added')}
+ spades.sides.forEach(p=>{p.score+=calculateSpadesRoundPoints(p)});
+ const winner=spades.sides.find(p=>p.score>=spades.goal);
+ if(winner){
+  recordGame('Spades',spades.sides.map(p=>({name:p.name,score:p.score})),winner.name,spades.goal);
+  renderSpadesWinner(winner);
+ }else{
+  spades.round++;
+  spades.sides.forEach(p=>{p.bid=0;p.books=0;p.blind=false});
+  renderSpades();
+  toast('Round scores added');
+ }
  saveSession();
 }
 function renderSpadesWinner(winner){$('sWinnerContent').innerHTML=`<div class="winner-box"><div class="trophy">🏆</div><div class="label">Spades winner</div><div class="winner-name"></div><div class="winner-score">${winner.score} points</div></div><div class="panel"><div class="section-title">Other players / teams</div><div id="sLosers" class="result-list"></div></div>`;$('sWinnerContent').querySelector('.winner-name').textContent=winner.name;spades.sides.filter(p=>p!==winner).forEach(p=>{let r=document.createElement('div');r.className='result-row';r.innerHTML='<span></span><b>'+p.score+' points</b>';r.querySelector('span').textContent=p.name;$('sLosers').append(r)});showView('spadesWinner')}
