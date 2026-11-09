@@ -41,17 +41,16 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:10px}
 </style>
 </head>
 <body>
-<header><div class="logo">GAME NIGHT • SCORE TRACKER</div><div class="title">Dominoes & Spades</div><div class="subtitle">Scorekeeping, game history and tournament tracking</div></header>
+<header><div class="logo">GAME NIGHT • SCORE TRACKER</div><div class="title">Dominoes & Spades</div><div class="subtitle">Scorekeeping, game history tracking</div></header>
 <main>
 <nav class="nav" id="mainNav">
-<button class="primary" data-view="home">Home</button><button class="secondary" data-view="dominoSetup">Dominoes</button><button class="secondary" data-view="spadesSetup">Spades</button><button class="secondary" data-view="history">Game History</button><button class="secondary" data-view="tournament">Tournament</button>
+<button class="primary" data-view="home">Home</button><button class="secondary" data-view="dominoSetup">Dominoes</button><button class="secondary" data-view="spadesSetup">Spades</button><button class="secondary" data-view="history">Game History</button>
 </nav>
 
 <section id="home" class="view active">
  <div class="panel"><div class="section-title">Choose a score tracker</div><div class="grid">
  <button class="primary" onclick="showView('dominoSetup')">🁣 Dominoes Scorekeeper</button>
  <button class="primary" onclick="showView('spadesSetup')">♠ Spades Score Tracker</button>
- <button class="secondary" onclick="showView('tournament')">🏆 Team Tournament</button>
  <button class="secondary" onclick="showView('history')">📚 Game History</button>
  </div><p class="note">Completed games are saved on this device. You can review or clear the history at any time.</p></div>
 </section>
