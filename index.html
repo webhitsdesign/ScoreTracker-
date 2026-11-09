@@ -6,21 +6,11 @@
 <meta name="theme-color" content="#123c35">
 <title>Dominoes & Spades Scorekeeper</title>
 <style>
-:root{color-scheme:light;--green:#123c35;--green2:#1d5a4d;--cream:#f7f4ec;--ink:#172522;--muted:#718078;--gold:#e7b85c;--red:#b94a42;--line:#dce4df;--card:#fff;--soft:#f5f7f5;--input:#fff;--shadow:#173a2d0c}
-:root[data-theme="dark"]{color-scheme:dark;--green:#0a2925;--green2:#236b5b;--cream:#111a18;--ink:#e8f0ec;--muted:#a7b7af;--gold:#e7b85c;--red:#f07b70;--line:#354740;--card:#1b2924;--soft:#24332d;--input:#1b2924;--shadow:#0005}
-:root[data-theme="dark"] header{background:#081f1c}
-:root[data-theme="dark"] .player-card.winner,:root[data-theme="dark"] .winner-box{background:#332d1e}
-:root[data-theme="dark"] .badge{background:#514324;color:#ffe1a0}
-:root[data-theme="dark"] .progress{background:#34433d}
-:root[data-theme="dark"] .add{background:#236b5b}
-:root[data-theme="dark"] .undo,:root[data-theme="dark"] .secondary{background:#2a3933;color:#e0ebe5}
-:root[data-theme="dark"] .danger{background:#482a28;color:#ffaaa1}
-:root[data-theme="dark"] .gold{background:#514324;color:#ffe1a0}
-:root[data-theme="dark"] .team-card{background:var(--soft)}
+:root{--green:#123c35;--green2:#1d5a4d;--cream:#f7f4ec;--ink:#172522;--muted:#718078;--gold:#e7b85c;--red:#b94a42;--line:#dce4df}
 *{box-sizing:border-box}body{margin:0;background:var(--cream);color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,sans-serif;min-height:100vh}
 header{background:var(--green);color:white;padding:23px 16px 25px;text-align:center;border-radius:0 0 26px 26px}
 .logo{font-size:11px;letter-spacing:3px;color:#c6d9d1;font-weight:800}.title{font-size:28px;font-weight:850;margin:5px 0}.subtitle{font-size:13px;color:#d5e2dc}
-main{max-width:850px;margin:0 auto;padding:18px 14px 40px}.panel{background:var(--card);border-radius:18px;padding:17px;box-shadow:0 5px 20px var(--shadow);margin-bottom:15px}
+main{max-width:850px;margin:0 auto;padding:18px 14px 40px}.panel{background:white;border-radius:18px;padding:17px;box-shadow:0 5px 20px #173a2d0c;margin-bottom:15px}
 .label{font-size:12px;font-weight:800;letter-spacing:1px;color:var(--muted);text-transform:uppercase;margin-bottom:10px}
 .row{display:flex;gap:9px;align-items:center;flex-wrap:wrap}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
 input[type=text],input[type=number],select{min-width:0;padding:12px;border:1px solid var(--line);border-radius:11px;font:inherit;background:white}
@@ -30,7 +20,7 @@ button:disabled{opacity:.38;cursor:not-allowed}.primary{background:var(--green2)
 .nav{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px}.nav button{flex:1;min-width:90px}
 .view{display:none}.view.active{display:block}.note{font-size:12px;color:var(--muted);line-height:1.5;margin-top:8px}
 .player-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
-.player-card{background:var(--card);border-radius:17px;padding:14px;border:2px solid transparent;box-shadow:0 5px 20px var(--shadow);min-width:0}
+.player-card{background:white;border-radius:17px;padding:14px;border:2px solid transparent;box-shadow:0 5px 20px #173a2d0c;min-width:0}
 .player-card.winner{border-color:var(--gold);background:#fffaf0}.player-head{display:flex;justify-content:space-between;align-items:center;gap:6px}
 .player-name{font-weight:850;overflow-wrap:anywhere}.score{font-size:38px;line-height:1.1;font-weight:850;letter-spacing:-2px;margin:13px 0 5px}
 .badge{font-size:10px;font-weight:900;letter-spacing:.7px;color:#88631f;background:#f7e9c7;padding:5px 8px;border-radius:20px}
@@ -39,10 +29,10 @@ button:disabled{opacity:.38;cursor:not-allowed}.primary{background:var(--green2)
 .add{background:var(--green);color:white}.undo{background:#edf2ef;color:#43534c}
 .section-title{font-weight:850;font-size:18px;margin:2px 0 12px}.winner-box{text-align:center;padding:26px 16px;background:#fffaf0;border:2px solid var(--gold);border-radius:20px;margin-bottom:14px}
 .trophy{font-size:54px}.winner-name{font-size:27px;font-weight:900;color:var(--green);margin:5px}.winner-score{font-size:20px;font-weight:850}
-.result-list{display:grid;gap:8px}.result-row,.history-item{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:11px 12px;background:var(--soft);border-radius:11px}
+.result-list{display:grid;gap:8px}.result-row,.history-item{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:11px 12px;background:#f5f7f5;border-radius:11px}
 .history-item{align-items:flex-start}.history-item small{display:block;color:var(--muted);margin-top:3px}
 table{width:100%;border-collapse:collapse;font-size:14px}th,td{text-align:left;padding:9px 7px;border-bottom:1px solid #edf1ee}th{color:var(--muted);font-size:11px;text-transform:uppercase}
-.team-card{background:var(--soft);border:1px solid var(--line);padding:13px;border-radius:14px;margin-bottom:10px}
+.team-card{background:#f8faf8;border:1px solid var(--line);padding:13px;border-radius:14px;margin-bottom:10px}
 .team-card h3{margin:0 0 9px}.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}.field label{display:block;font-size:12px;font-weight:750;color:var(--muted);margin-bottom:5px}
 .checkbox{display:flex;align-items:center;gap:7px;font-size:13px;font-weight:700;margin:8px 0}
 #toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#172522;color:white;padding:10px 15px;border-radius:12px;display:none;z-index:5}
@@ -54,14 +44,14 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:10px}
 <header><div class="logo">GAME NIGHT • SCORE TRACKER</div><div class="title">Dominoes & Spades</div><div class="subtitle">Scorekeeping, game history and tournament tracking</div></header>
 <main>
 <nav class="nav" id="mainNav">
-<button class="primary" data-view="home">Home</button><button class="secondary" data-view="dominoSetup">Dominoes</button><button class="secondary" data-view="spadesSetup">Spades</button><button class="secondary" data-view="history">Game History</button>
+<button class="primary" data-view="home">Home</button><button class="secondary" data-view="dominoSetup">Dominoes</button><button class="secondary" data-view="spadesSetup">Spades</button><button class="secondary" data-view="history">Game History</button><button class="secondary" data-view="tournament">Tournament</button>
 </nav>
 
 <section id="home" class="view active">
  <div class="panel"><div class="section-title">Choose a score tracker</div><div class="grid">
  <button class="primary" onclick="showView('dominoSetup')">🁣 Dominoes Scorekeeper</button>
  <button class="primary" onclick="showView('spadesSetup')">♠ Spades Score Tracker</button>
- 
+ <button class="secondary" onclick="showView('tournament')">🏆 Team Tournament</button>
  <button class="secondary" onclick="showView('history')">📚 Game History</button>
  </div><p class="note">Completed games are saved on this device. You can review or clear the history at any time.</p></div>
 </section>
@@ -108,28 +98,22 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:10px}
  <button class="secondary" onclick="showView('home')">Home</button>
 </section>
 
+<section id="tournament" class="view">
+ <div class="panel"><div class="label">Dominoes team tournament</div><div class="section-title">Tournament tracker</div>
+ <div class="row"><input type="text" id="tName" placeholder="Tournament name"><input type="number" id="tGoal" value="5" min="1" max="99" style="width:90px" title="Wins to clinch"></div>
+ <p class="note">Add team names and record a win after each completed team game. Standings are saved on this device.</p>
+ <div class="row" style="margin:12px 0"><input type="text" id="teamName" placeholder="Team name"><button class="primary" onclick="addTeam()">Add team</button></div>
+ <div id="teamStandings"></div>
+ <div class="row" style="margin-top:12px"><button class="secondary" onclick="resetTournament()">Reset tournament</button><button class="secondary" onclick="showView('home')">Home</button></div></div>
+</section>
 <footer>Local scorekeeper • Your games and history stay in this browser</footer>
 </main><div id="toast" role="status"></div>
 <script>
-
-const themeKey='scorekeeperTheme';
-function applyTheme(theme){
-  document.documentElement.dataset.theme=theme;
-  const btn=document.getElementById('themeToggle');
-  if(btn) btn.textContent=theme==='dark'?'☀️ Light mode':'🌙 Dark mode';
-}
-applyTheme(localStorage.getItem(themeKey)||'light');
-document.getElementById('themeToggle').addEventListener('click',()=>{
-  const next=document.documentElement.dataset.theme==='dark'?'light':'dark';
-  localStorage.setItem(themeKey,next);
-  applyTheme(next);
-});
-
 const $=id=>document.getElementById(id);
-let domino=null,spades=null,spadesRoundUndo=null;
+let domino=null,spades=null,spadesRoundUndo=null,tournament=JSON.parse(localStorage.getItem('dominoTournament')||'{"name":"","goal":5,"teams":[]}');
 let games=JSON.parse(localStorage.getItem('scoreGames')||'[]');
 function saveGames(){localStorage.setItem('scoreGames',JSON.stringify(games))}
-function showView(id){document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));$(id).classList.add('active');document.querySelectorAll('#mainNav button').forEach(b=>{b.className=b.dataset.view===id?'primary':'secondary'});if(id==='history')renderHistory();window.scrollTo(0,0)}
+function showView(id){document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));$(id).classList.add('active');document.querySelectorAll('#mainNav button').forEach(b=>{b.className=b.dataset.view===id?'primary':'secondary'});if(id==='history')renderHistory();if(id==='tournament')renderTournament();window.scrollTo(0,0)}
 document.querySelectorAll('#mainNav button').forEach(b=>b.onclick=()=>showView(b.dataset.view));
 function buildNameInputs(container,count,prefix,defaults){$(container).innerHTML='';for(let i=0;i<count;i++){let x=document.createElement('input');x.type='text';x.maxLength=28;x.placeholder=defaults[i]||`Player ${i+1}`;x.value=defaults[i]||`Player ${i+1}`;x.id=prefix+i;$(container).append(x)}}
 $('dCount').onchange=()=>buildNameInputs('dNames',+$('dCount').value,'dn',[]);buildNameInputs('dNames',2,'dn',[]);
@@ -151,5 +135,10 @@ function rematchSpades(){if(!spades)return;spadesRoundUndo=null;spades.round=1;s
 function renderHistory(){let el=$('historyList');el.innerHTML='';if(!games.length){el.innerHTML='<p class="note">No completed games yet.</p>';return}games.forEach(g=>{let item=document.createElement('div');item.className='history-item';let left=document.createElement('div');left.innerHTML=`<b>${g.type} • ${g.winner} won</b><small>${g.date} · Goal: ${g.goal}</small>`;let right=document.createElement('div');right.style.textAlign='right';right.innerHTML=g.entries.map(e=>`${escapeHtml(e.name)}: ${e.score}`).join('<br>');item.append(left,right);el.append(item)})}
 function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function clearHistory(){if(confirm('Permanently delete all completed game history?')){games=[];saveGames();renderHistory();toast('Game history cleared')}}
+function addTeam(){let name=$('teamName').value.trim();if(!name)return; if(tournament.teams.some(t=>t.name.toLowerCase()===name.toLowerCase())){toast('That team already exists');return}tournament.teams.push({name,wins:0,losses:0});$('teamName').value='';saveTournament();renderTournament()}
+function saveTournament(){localStorage.setItem('dominoTournament',JSON.stringify(tournament))}
+function renderTournament(){$('tName').value=tournament.name||'';$('tGoal').value=tournament.goal||5;$('teamStandings').innerHTML='';if(!tournament.teams.length){$('teamStandings').innerHTML='<p class="note">No teams added yet.</p>';return}let sorted=[...tournament.teams].sort((a,b)=>b.wins-a.wins);sorted.forEach(t=>{let d=document.createElement('div');d.className='team-card';d.innerHTML=`<div class="row" style="justify-content:space-between"><b></b><b>${t.wins} wins · ${t.losses} losses</b></div><div class="row" style="margin-top:9px"><button class="primary">Record win</button><button class="secondary">Record loss</button><button class="danger">Remove</button></div>`;d.querySelector('.row b').textContent=t.name;let bs=d.querySelectorAll('button');bs[0].onclick=()=>{t.wins++;saveTournament();renderTournament()};bs[1].onclick=()=>{t.losses++;saveTournament();renderTournament()};bs[2].onclick=()=>{if(confirm('Remove '+t.name+' from this tournament?')){tournament.teams=tournament.teams.filter(x=>x!==t);saveTournament();renderTournament()}};$('teamStandings').append(d)})}
+$('tName').onchange=()=>{tournament.name=$('tName').value;saveTournament()};$('tGoal').onchange=()=>{tournament.goal=Math.max(1,+$('tGoal').value||5);saveTournament();renderTournament()};
+function resetTournament(){if(confirm('Reset all tournament teams and standings?')){tournament={name:'',goal:5,teams:[]};saveTournament();renderTournament()}}
 </script>
 </body></html>
