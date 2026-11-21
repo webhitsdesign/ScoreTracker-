@@ -147,13 +147,14 @@ main { padding-bottom:max(42px,calc(env(safe-area-inset-bottom) + 28px)); }
   .nav button { min-height:52px; }
   #home .grid button { min-height:86px;font-size:16px; }
 }
+.tips-steps{padding-left:25px;margin:12px 0 4px;line-height:1.65}.tips-steps li{padding:5px 0 5px 3px}#tips a{overflow-wrap:anywhere;color:var(--green2);font-weight:700}:root[data-theme="dark"] #tips a{color:#9ce0cb}@media(max-width:650px){.nav button[data-view="tips"]{grid-column:1/-1}}
 </style>
 </head>
 <body>
 <header><div class="logo">GAME NIGHT • SCORE TRACKER</div><div class="title">Dominoes & Spades</div><div class="subtitle">Scorekeeping, game history and rematches</div><button id="themeToggle" class="secondary" style="margin-top:12px;padding:8px 13px" type="button">🌙 Dark mode</button></header>
 <main>
 <nav class="nav" id="mainNav">
-<button class="primary" data-view="home">Home</button><button class="secondary" data-view="dominoSetup">Dominoes</button><button class="secondary" data-view="spadesSetup">Spades</button><button class="secondary" data-view="history">Game History</button>
+<button class="primary" data-view="home">Home</button><button class="secondary" data-view="dominoSetup">Dominoes</button><button class="secondary" data-view="spadesSetup">Spades</button><button class="secondary" data-view="history">Game History</button><button class="secondary" data-view="tips">Tips</button>
 </nav>
 
 <section id="home" class="view active">
@@ -164,6 +165,38 @@ main { padding-bottom:max(42px,calc(env(safe-area-inset-bottom) + 28px)); }
  </div><p class="note">Completed games are saved on this device. You can review or clear the history at any time.</p></div>
 </section>
 
+<section id="tips" class="view">
+ <div class="panel">
+  <div class="section-title">📱 Add ScoreTracker to Your Home Screen</div>
+  <p>Launch Dominoes &amp; Spades with one tap by adding ScoreTracker to your phone's Home Screen.</p>
+  <p><a href="https://scoretracker.webhitsdesign.com" target="_blank" rel="noopener">scoretracker.webhitsdesign.com</a></p>
+ </div>
+ <div class="panel">
+  <div class="section-title">🍎 iPhone / iPad (Safari)</div>
+  <ol class="tips-steps">
+   <li>Open <strong>scoretracker.webhitsdesign.com</strong> in <strong>Safari</strong>.</li>
+   <li>Tap <strong>Share</strong> (square with an upward arrow), or open Safari's page menu.</li>
+   <li>Choose <strong>Add to Home Screen</strong>. If missing, look under <strong>Edit Actions</strong>.</li>
+   <li>Name the shortcut <strong>ScoreTracker</strong>, then tap <strong>Add</strong>.</li>
+   <li>Tap the new ScoreTracker icon on your Home Screen.</li>
+  </ol>
+ </div>
+ <div class="panel">
+  <div class="section-title">🤖 Android (Chrome)</div>
+  <ol class="tips-steps">
+   <li>Open <strong>scoretracker.webhitsdesign.com</strong> in <strong>Chrome</strong>.</li>
+   <li>Tap Chrome's <strong>three-dot menu</strong>.</li>
+   <li>Select <strong>Add to Home screen</strong> or <strong>Install app</strong>.</li>
+   <li>Confirm by tapping <strong>Add</strong> or <strong>Install</strong>.</li>
+   <li>Tap ScoreTracker from your Home Screen.</li>
+  </ol>
+ </div>
+ <div class="panel">
+  <div class="section-title">💡 Tips</div>
+  <p class="note">Adding the app is free. Game history stays in this device's browser storage and does not automatically sync across devices.</p>
+  <button type="button" class="primary" onclick="showView('home')">Back to Home</button>
+ </div>
+</section>
 <section id="dominoSetup" class="view">
  <div class="panel"><div class="label">New dominoes game</div>
  <div class="row" style="margin-bottom:12px"><label><b>Players</b></label><select id="dCount"><option>2</option><option>3</option><option>4</option></select></div>
