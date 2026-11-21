@@ -4,6 +4,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#123c35">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="ScoreTracker">
+<meta name="application-name" content="ScoreTracker">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="description" content="Dominoes and Spades scorekeeping for game night.">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="apple-touch-icon" href="./apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="192x192" href="./icon-192.png">
 <title>Dominoes & Spades Scorekeeper</title>
 <style>
 :root{color-scheme:light;--green:#123c35;--green2:#1d5a4d;--cream:#f7f4ec;--ink:#172522;--muted:#718078;--gold:#e7b85c;--red:#b94a42;--line:#dce4df;--card:#fff;--soft:#f5f7f5;--input:#fff;--shadow:#173a2d0c}
@@ -125,6 +134,19 @@ input[type=checkbox] { width:20px; height:20px; accent-color:var(--green2); }
   button { transition:none; }
 }
 
+/* Installed-app refinements */
+body { padding-bottom:env(safe-area-inset-bottom); }
+header { padding-top:max(22px,env(safe-area-inset-top)); }
+main { padding-bottom:max(42px,calc(env(safe-area-inset-bottom) + 28px)); }
+@media(display-mode:standalone) {
+  header { padding-top:max(28px,calc(env(safe-area-inset-top) + 12px)); }
+  .logo { letter-spacing:2px; }
+  .nav { position:sticky;top:0;z-index:4;background:var(--cream);padding:10px 0;margin-top:-4px; }
+}
+@media(max-width:650px) {
+  .nav button { min-height:52px; }
+  #home .grid button { min-height:86px;font-size:16px; }
+}
 </style>
 </head>
 <body>
@@ -289,5 +311,12 @@ function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':
 function clearHistory(){if(confirm('Permanently delete all completed game history?')){games=[];saveGames();renderHistory();toast('Game history cleared')}}
 (function restoreSession(){let saved;try{saved=JSON.parse(localStorage.getItem('scorekeeperSession')||'null')}catch(e){}if(!saved)return;domino=saved.domino||null;spades=saved.spades||null;spadesRoundUndo=saved.spadesRoundUndo||null;let view=saved.view||'home';if(view==='dominoGame'&&domino){renderDomino();showView('dominoGame')}else if(view==='spadesGame'&&spades){renderSpades();showView('spadesGame')}else if(view==='dominoWinner'&&domino){let w=domino.players.find(p=>p.score>=domino.goal);if(w){finishDominoViewOnly(w);showView('dominoWinner')}}else if(view==='spadesWinner'&&spades){let w=spades.sides.find(p=>p.score>=spades.goal);if(w){renderSpadesWinner(w);showView('spadesWinner')}}})();
 function finishDominoViewOnly(winner){$('dWinnerContent').innerHTML=`<div class="winner-box"><div class="trophy">🏆</div><div class="label">Dominoes winner</div><div class="winner-name"></div><div class="winner-score">${winner.score} points</div><div style="font-weight:800;margin-top:7px">“It won’t hold anymore”</div></div><div class="panel"><div class="section-title">Other players</div><div class="result-list" id="dLosers"></div></div>`;$('dWinnerContent').querySelector('.winner-name').textContent=winner.name;domino.players.filter(p=>p!==winner).forEach(p=>{let row=document.createElement('div');row.className='result-row';row.innerHTML='<span></span><b>'+p.score+' points '+(p.score<75?'• SNUNK':'')+'</b>';row.querySelector('span').textContent=p.name;$('dLosers').append(row)})}
+</script>
+<script>
+if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost')) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js').catch(err => console.warn('Offline support unavailable:', err));
+  });
+}
 </script>
 </body></html>
