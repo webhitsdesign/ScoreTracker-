@@ -224,7 +224,7 @@ main { padding-bottom:max(42px,calc(env(safe-area-inset-bottom) + 28px)); }
 <section id="spadesGame" class="view">
  <div class="panel"><div class="row" style="justify-content:space-between"><div><div class="label">Winning score</div><b id="sTargetLabel">350</b></div><div><div class="label">Round</div><b id="sRoundLabel">1</b></div></div></div>
  <div id="sCards"></div>
- <div class="panel"><div class="label">Round controls</div><div class="row"><button class="primary" style="flex:1" onclick="submitSpadesRound()">Submit round scores</button><button class="secondary" style="flex:1" onclick="undoSpadesRound()" id="undoSpades">Undo last round</button></div><p class="note">The combined books made for all players/teams must equal 13 before a round can be submitted. If bid > books made, subtract (last bid × 10 × blind value). If bid ≤ books made, add (last bid × 10 × blind value) + (books made − bid). No scores change unless all players/teams total exactly 13 books. Use the − and + buttons to change bids; Undo last round restores the previous round.</p></div>
+ <div class="panel"><div class="label">Round controls</div><div class="row"><button class="primary" style="flex:1" onclick="submitSpadesRound()">Submit round scores</button><button class="secondary" style="flex:1" onclick="undoSpadesRound()" id="undoSpades">Undo last round</button></div><p class="note">The combined books made for all players/teams must equal 13 before a round can be submitted. No scores change unless all players/teams total exactly 13 books. Use the − and + buttons to change bids; Undo last round restores the previous round.</p></div>
 </section>
 
 <section id="spadesWinner" class="view">
