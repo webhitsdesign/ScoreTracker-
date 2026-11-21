@@ -139,7 +139,6 @@ input[type=checkbox] { width:20px; height:20px; accent-color:var(--green2); }
  <button class="primary" onclick="showView('dominoSetup')">🁣 Dominoes Scorekeeper</button>
  <button class="primary" onclick="showView('spadesSetup')">♠ Spades Score Tracker</button>
  
- <button class="secondary" onclick="showView('history')">📚 Game History</button>
  </div><p class="note">Completed games are saved on this device. You can review or clear the history at any time.</p></div>
 </section>
 
@@ -151,7 +150,6 @@ input[type=checkbox] { width:20px; height:20px; accent-color:var(--green2); }
 </section>
 
 <section id="dominoGame" class="view">
- <div class="nav"><button class="secondary" onclick="showView('dominoSetup')">New Game</button><button class="secondary" onclick="showView('history')">Game History</button><button class="secondary" onclick="showView('home')">Home</button></div>
  <div id="dStatus" class="panel" style="text-align:center;font-weight:850;color:var(--green)">Game in progress</div><div id="dCards" class="player-grid"></div>
  <div class="panel"><div class="row" style="justify-content:space-between"><div><div class="label">Game target</div><b id="dTargetLabel">150 points</b></div><button class="danger" onclick="confirmNew('domino')">End / New Game</button></div></div>
 </section>
@@ -162,14 +160,13 @@ input[type=checkbox] { width:20px; height:20px; accent-color:var(--green2); }
 
 <section id="spadesSetup" class="view">
  <div class="panel"><div class="label">New spades game</div>
- <div class="row" style="margin-bottom:12px"><label><b>Players</b></label><select id="sCount"><option>2</option><option>3</option><option selected>4</option></select></div>
+ <div class="row" style="margin-bottom:12px"><label><b>Players</b></label><select id="sCount"><option selected>2</option><option>3</option><option>4</option></select></div>
  <div class="row" style="margin-bottom:12px"><label><b>Winning score</b></label><input id="sGoal" type="number" min="1" max="5000" value="350"></div>
  <div id="sNames" class="grid"></div><div class="row" style="margin-top:13px"><button class="primary" style="width:100%" onclick="startSpades()">Start spades game</button><button id="resumeSpades" class="secondary" style="width:100%;display:none" onclick="resumeSpades()">Resume saved game</button></div>
  <p class="note">Default winning goal is 350. Each player or team enters a bid from 1–13, chooses Blind if applicable, and records books made. The combined books made across all entries must equal 13 each round.</p></div>
 </section>
 
 <section id="spadesGame" class="view">
- <div class="nav"><button class="secondary" onclick="showView('spadesSetup')">New Game</button><button class="secondary" onclick="showView('history')">Game History</button><button class="secondary" onclick="showView('home')">Home</button></div>
  <div class="panel"><div class="row" style="justify-content:space-between"><div><div class="label">Winning score</div><b id="sTargetLabel">350</b></div><div><div class="label">Round</div><b id="sRoundLabel">1</b></div></div></div>
  <div id="sCards"></div>
  <div class="panel"><div class="label">Round controls</div><div class="row"><button class="primary" style="flex:1" onclick="submitSpadesRound()">Submit round scores</button><button class="secondary" style="flex:1" onclick="undoSpadesRound()" id="undoSpades">Undo last round</button></div><p class="note">The combined books made for all players/teams must equal 13 before a round can be submitted. If bid > books made, subtract (last bid × 10 × blind value). If bid ≤ books made, add (last bid × 10 × blind value) + (books made − bid). No scores change unless all players/teams total exactly 13 books. Use Edit bid to change a bid after entering it; Undo last round restores the previous round.</p></div>
@@ -211,7 +208,7 @@ function showView(id){document.querySelectorAll('.view').forEach(v=>v.classList.
 document.querySelectorAll('#mainNav button').forEach(b=>b.onclick=()=>showView(b.dataset.view));
 function buildNameInputs(container,count,prefix,defaults){$(container).innerHTML='';for(let i=0;i<count;i++){let x=document.createElement('input');x.type='text';x.maxLength=28;x.placeholder=defaults[i]||`Player ${i+1}`;x.value=defaults[i]||`Player ${i+1}`;x.id=prefix+i;$(container).append(x)}}
 $('dCount').onchange=()=>buildNameInputs('dNames',+$('dCount').value,'dn',[]);buildNameInputs('dNames',2,'dn',[]);
-$('sCount').onchange=()=>buildNameInputs('sNames',+$('sCount').value,'sn',[]);buildNameInputs('sNames',4,'sn',[]);
+$('sCount').onchange=()=>buildNameInputs('sNames',+$('sCount').value,'sn',[]);buildNameInputs('sNames',2,'sn',[]);
 function toast(msg){$('toast').textContent=msg;$('toast').style.display='block';setTimeout(()=>$('toast').style.display='none',2200)}
 function recordGame(type,entries,winner,goal){games.unshift({id:Date.now(),type,date:new Date().toLocaleString(),goal,winner,entries});saveGames()}
 function resumeDomino(){if(domino){renderDomino();showView('dominoGame')}}
