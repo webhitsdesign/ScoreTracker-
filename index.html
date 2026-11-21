@@ -87,9 +87,9 @@ input[type=checkbox] { width:20px; height:20px; accent-color:var(--green2); }
 #sCards .panel { margin-bottom:14px; }
 #sCards .form-grid { gap:16px; }
 #sCards .field .row { flex-wrap:nowrap; }
-#sCards .booksDown,#sCards .booksUp { min-width:48px; min-height:48px; font-size:20px; }
-#sCards .booksValue { min-width:32px; text-align:center; font-size:22px; font-variant-numeric:tabular-nums; }
-#sCards .editBid { min-height:44px; }
+#sCards .bidDown,#sCards .bidUp,#sCards .booksDown,#sCards .booksUp { min-width:48px; min-height:48px; font-size:20px; }
+#sCards .bidValue,#sCards .booksValue { min-width:32px; text-align:center; font-size:22px; font-variant-numeric:tabular-nums; }
+
 .winner-box { padding:clamp(24px,4vw,38px) 16px; }
 :root[data-theme="dark"] .winner-name { color:#ffe1a0; }
 :root[data-theme="dark"] .player-card { border-color:var(--line); }
@@ -169,7 +169,7 @@ input[type=checkbox] { width:20px; height:20px; accent-color:var(--green2); }
 <section id="spadesGame" class="view">
  <div class="panel"><div class="row" style="justify-content:space-between"><div><div class="label">Winning score</div><b id="sTargetLabel">350</b></div><div><div class="label">Round</div><b id="sRoundLabel">1</b></div></div></div>
  <div id="sCards"></div>
- <div class="panel"><div class="label">Round controls</div><div class="row"><button class="primary" style="flex:1" onclick="submitSpadesRound()">Submit round scores</button><button class="secondary" style="flex:1" onclick="undoSpadesRound()" id="undoSpades">Undo last round</button></div><p class="note">The combined books made for all players/teams must equal 13 before a round can be submitted. If bid > books made, subtract (last bid × 10 × blind value). If bid ≤ books made, add (last bid × 10 × blind value) + (books made − bid). No scores change unless all players/teams total exactly 13 books. Use Edit bid to change a bid after entering it; Undo last round restores the previous round.</p></div>
+ <div class="panel"><div class="label">Round controls</div><div class="row"><button class="primary" style="flex:1" onclick="submitSpadesRound()">Submit round scores</button><button class="secondary" style="flex:1" onclick="undoSpadesRound()" id="undoSpades">Undo last round</button></div><p class="note">The combined books made for all players/teams must equal 13 before a round can be submitted. If bid > books made, subtract (last bid × 10 × blind value). If bid ≤ books made, add (last bid × 10 × blind value) + (books made − bid). No scores change unless all players/teams total exactly 13 books. Use the − and + buttons to change bids; Undo last round restores the previous round.</p></div>
 </section>
 
 <section id="spadesWinner" class="view">
@@ -218,7 +218,7 @@ function renderDomino(){if(!domino)return;let w=domino.players.find(p=>p.score>=
 function finishDomino(winner){recordGame('Dominoes',domino.players.map(p=>({name:p.name,score:p.score})),winner.name,domino.goal);$('dWinnerContent').innerHTML=`<div class="winner-box"><div class="trophy">🏆</div><div class="label">Dominoes winner</div><div class="winner-name"></div><div class="winner-score">${winner.score} points</div><div style="font-weight:800;margin-top:7px">“It won’t hold anymore”</div></div><div class="panel"><div class="section-title">Other players</div><div class="result-list" id="dLosers"></div></div>`;$('dWinnerContent').querySelector('.winner-name').textContent=winner.name;domino.players.filter(p=>p!==winner).forEach(p=>{let row=document.createElement('div');row.className='result-row';row.innerHTML=`<span></span><b>${p.score} points ${p.score<75&&domino.goal===150?'• SNUNK':''}</b>`;row.querySelector('span').textContent=p.name;$('dLosers').append(row)});showView('dominoWinner')}
 function rematchDomino(){if(!domino)return;domino.players.forEach(p=>p.score=0);renderDomino();showView('dominoGame')}
 function confirmNew(type){if(confirm('Start a new game? The current unfinished scores will be cleared.'))showView(type==='domino'?'dominoSetup':'spadesSetup')}
-function startSpades(){let n=+$('sCount').value,goal=Math.max(1,+$('sGoal').value||350);spades={goal,round:1,sides:Array.from({length:n},(_,i)=>({name:$('sn'+i).value.trim()||`Player ${i+1}`,score:0,bid:1,books:0,blind:false}))};spadesRoundUndo=null;renderSpades();showView('spadesGame')}
+function startSpades(){let n=+$('sCount').value,goal=Math.max(1,+$('sGoal').value||350);spades={goal,round:1,sides:Array.from({length:n},(_,i)=>({name:$('sn'+i).value.trim()||`Player ${i+1}`,score:0,bid:4,books:0,blind:false}))};spadesRoundUndo=null;renderSpades();showView('spadesGame')}
 function renderSpades(){
  if(!spades)return;
  $('undoSpades').disabled=!spadesRoundUndo;
@@ -227,12 +227,11 @@ function renderSpades(){
  $('sCards').innerHTML='';
  spades.sides.forEach((p,i)=>{
   let box=document.createElement('div');box.className='panel';
-  box.innerHTML=`<div class="row" style="justify-content:space-between"><div class="section-title sideName"></div><button class="secondary editName">Edit name</button></div><div class="score">${p.score}<small> points</small></div><div class="form-grid"><div class="field"><label>Bid (1–13)</label><input type="number" min="1" max="13" class="bid" value="${p.bid??''}" placeholder="Bid" disabled><button type="button" class="secondary editBid" style="margin-top:6px;width:100%">Edit bid</button></div><div class="field"><label>Books made (0–13)</label><div class="row"><button type="button" class="secondary booksDown">−</button><b class="booksValue">${p.books}</b><button type="button" class="secondary booksUp">+</button></div></div></div><label class="checkbox"><input type="checkbox" class="blind" ${p.blind?'checked':''}> Blind bid (doubles bid value)</label><div class="note">Blind multiplier: ${p.blind?2:1}×</div>`;
+  box.innerHTML=`<div class="row" style="justify-content:space-between"><div class="section-title sideName"></div><button class="secondary editName">Edit name</button></div><div class="score">${p.score}<small> points</small></div><div class="form-grid"><div class="field"><label>Bid (1–13)</label><div class="row"><button type="button" class="secondary bidDown" aria-label="Decrease bid">−</button><b class="bidValue">${p.bid}</b><button type="button" class="secondary bidUp" aria-label="Increase bid">+</button></div></div><div class="field"><label>Books made (0–13)</label><div class="row"><button type="button" class="secondary booksDown">−</button><b class="booksValue">${p.books}</b><button type="button" class="secondary booksUp">+</button></div></div></div><label class="checkbox"><input type="checkbox" class="blind" ${p.blind?'checked':''}> Blind bid (doubles bid value)</label><div class="note">Blind multiplier: ${p.blind?2:1}×</div>`;
   box.querySelector('.sideName').textContent=p.name;
   box.querySelector('.editName').onclick=()=>{let v=prompt('Update player or team name:',p.name);if(v&&v.trim()){p.name=v.trim().slice(0,28);renderSpades()}};
-  const bidInput=box.querySelector('.bid'),editBid=box.querySelector('.editBid');
-  editBid.onclick=()=>{if(bidInput.disabled){bidInput.disabled=false;bidInput.focus();editBid.textContent='Save bid'}else{let v=Number(bidInput.value);if(!Number.isInteger(v)||v<1||v>13){toast('Bid must be from 1 to 13');bidInput.focus();return}p.bid=v;bidInput.disabled=true;editBid.textContent='Edit bid';saveSession();toast('Bid updated')}};
-  bidInput.onkeydown=e=>{if(e.key==='Enter'&&!bidInput.disabled)editBid.click()};
+  box.querySelector('.bidDown').onclick=()=>{p.bid=Math.max(1,Number(p.bid)||1);p.bid=Math.max(1,p.bid-1);box.querySelector('.bidValue').textContent=p.bid;saveSession()};
+  box.querySelector('.bidUp').onclick=()=>{p.bid=Math.min(13,(Number(p.bid)||0)+1);box.querySelector('.bidValue').textContent=p.bid;saveSession()};
   box.querySelector('.booksDown').onclick=()=>{p.books=Math.max(0,p.books-1);box.querySelector('.booksValue').textContent=p.books;saveSession()};
   box.querySelector('.booksUp').onclick=()=>{p.books=Math.min(13,p.books+1);box.querySelector('.booksValue').textContent=p.books;saveSession()};
   box.querySelector('.blind').onchange=e=>{p.blind=e.target.checked;box.querySelector('.note').textContent='Blind multiplier: '+(p.blind?2:1)+'×';saveSession()};
@@ -276,7 +275,7 @@ function submitSpadesRound(){
   renderSpadesWinner(winner);
  }else{
   spades.round++;
-  spades.sides.forEach(p=>{p.bid=0;p.books=0;p.blind=false});
+  spades.sides.forEach(p=>{p.bid=4;p.books=0;p.blind=false});
   renderSpades();
   toast('Round scores added');
  }
@@ -284,7 +283,7 @@ function submitSpadesRound(){
 }
 function renderSpadesWinner(winner){$('sWinnerContent').innerHTML=`<div class="winner-box"><div class="trophy">🏆</div><div class="label">Spades winner</div><div class="winner-name"></div><div class="winner-score">${winner.score} points</div></div><div class="panel"><div class="section-title">Other players / teams</div><div id="sLosers" class="result-list"></div></div>`;$('sWinnerContent').querySelector('.winner-name').textContent=winner.name;spades.sides.filter(p=>p!==winner).forEach(p=>{let r=document.createElement('div');r.className='result-row';r.innerHTML='<span></span><b>'+p.score+' points</b>';r.querySelector('span').textContent=p.name;$('sLosers').append(r)});showView('spadesWinner')}
 function undoSpadesRound(){if(!spadesRoundUndo){toast('There is no round to undo');return}spades=JSON.parse(JSON.stringify(spadesRoundUndo));spadesRoundUndo=null;renderSpades();toast('Last round undone');saveSession()}
-function rematchSpades(){if(!spades)return;spadesRoundUndo=null;spades.round=1;spades.sides.forEach(p=>{p.score=0;p.bid=1;p.books=0;p.blind=false});renderSpades();showView('spadesGame')}
+function rematchSpades(){if(!spades)return;spadesRoundUndo=null;spades.round=1;spades.sides.forEach(p=>{p.score=0;p.bid=4;p.books=0;p.blind=false});renderSpades();showView('spadesGame')}
 function renderHistory(){let el=$('historyList');el.innerHTML='';if(!games.length){el.innerHTML='<p class="note">No completed games yet.</p>';return}games.forEach(g=>{let item=document.createElement('div');item.className='history-item';let left=document.createElement('div');left.innerHTML=`<b>${escapeHtml(g.type)} • ${escapeHtml(g.winner)} won</b><small>${escapeHtml(g.date)} · Goal: ${g.goal}</small>`;let right=document.createElement('div');right.style.textAlign='right';right.innerHTML=g.entries.map(e=>`${escapeHtml(e.name)}: ${e.score}`).join('<br>');item.append(left,right);el.append(item)})}
 function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function clearHistory(){if(confirm('Permanently delete all completed game history?')){games=[];saveGames();renderHistory();toast('Game history cleared')}}
