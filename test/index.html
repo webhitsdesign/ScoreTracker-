@@ -214,7 +214,7 @@ main { padding-bottom:max(42px,calc(env(safe-area-inset-bottom) + 28px)); }
 <section id="dominoSetup" class="view">
  <div class="panel"><div class="label">New dominoes game</div>
  <div class="row" style="margin-bottom:12px"><label><b>Players</b></label><select id="dCount"><option>2</option><option>3</option><option>4</option></select></div>
- <div class="row"><select id="dSavedGroup" aria-label="Saved Dominoes group"><option value="">Saved groups</option></select><button class="secondary" onclick="loadPlayerGroup('Dominoes')">Load group</button><button class="secondary" onclick="savePlayerGroup('Dominoes')">Save group</button></div><div id="dNames" class="grid"></div><div class="row" style="margin-top:13px"><button class="primary" style="width:100%" onclick="startDomino()">Start dominoes game</button><button id="resumeDomino" class="secondary" style="width:100%;display:none" onclick="resumeDomino()">Resume saved game</button></div>
+ <div id="dNames" class="grid"></div><div class="row" style="margin-top:13px"><button class="primary" style="width:100%" onclick="startDomino()">Start dominoes game</button><button id="resumeDomino" class="secondary" style="width:100%;display:none" onclick="resumeDomino()">Resume saved game</button></div>
  <p class="note">Each tap adds 5 points. You can also add or undo 10 points. First player to reach 150 wins. Losing players below 75 points are marked Snunk.</p></div>
 </section>
 
@@ -231,7 +231,7 @@ main { padding-bottom:max(42px,calc(env(safe-area-inset-bottom) + 28px)); }
  <div class="panel"><div class="label">New spades game</div>
  <div class="row" style="margin-bottom:12px"><label><b>Players</b></label><select id="sCount"><option selected>2</option><option>3</option><option>4</option></select></div>
  <div class="row" style="margin-bottom:12px"><label><b>Winning score</b></label><input id="sGoal" type="number" min="1" max="5000" value="350"></div>
- <div class="row"><select id="sSavedGroup" aria-label="Saved Spades group"><option value="">Saved groups</option></select><button class="secondary" onclick="loadPlayerGroup('Spades')">Load group</button><button class="secondary" onclick="savePlayerGroup('Spades')">Save group</button></div><div id="sNames" class="grid"></div><div class="row" style="margin-top:13px"><button class="primary" style="width:100%" onclick="startSpades()">Start spades game</button><button id="resumeSpades" class="secondary" style="width:100%;display:none" onclick="resumeSpades()">Resume saved game</button></div>
+ <div id="sNames" class="grid"></div><div class="row" style="margin-top:13px"><button class="primary" style="width:100%" onclick="startSpades()">Start spades game</button><button id="resumeSpades" class="secondary" style="width:100%;display:none" onclick="resumeSpades()">Resume saved game</button></div>
  <p class="note">Default winning goal is 350. Each player or team enters a bid from 1–13, chooses Blind if applicable, and records books made. The combined books made across all entries must equal 13 each round.</p></div>
 </section>
 
@@ -280,12 +280,6 @@ $('dCount').onchange=()=>buildNameInputs('dNames',+$('dCount').value,'dn',[]);bu
 $('sCount').onchange=()=>buildNameInputs('sNames',+$('sCount').value,'sn',[]);buildNameInputs('sNames',2,'sn',[]);
 function toast(msg){$('toast').textContent=msg;$('toast').style.display='block';setTimeout(()=>$('toast').style.display='none',2200)}
 function recordGame(type,entries,winner,goal,rounds){games.unshift({id:Date.now(),type,date:new Date().toLocaleString(),goal,winner,entries,rounds:rounds||[]});saveGames()}
-const playerGroupKey='scorekeeperTestPlayerGroups';
-function getPlayerGroups(){try{return JSON.parse(localStorage.getItem(playerGroupKey)||'[]')}catch(e){return []}}
-function refreshPlayerGroups(){for(const [type,id] of [['Dominoes','dSavedGroup'],['Spades','sSavedGroup']]){const select=$(id);if(!select)continue;const previous=select.value;select.innerHTML='<option value="">Saved groups</option>';getPlayerGroups().filter(g=>g.type===type).forEach(g=>{const option=document.createElement('option');option.value=g.id;option.textContent=g.name;select.append(option)});if([...select.options].some(o=>o.value===previous))select.value=previous}}
-function savePlayerGroup(type){const prefix=type==='Dominoes'?'dn':'sn',count=Number($(type==='Dominoes'?'dCount':'sCount').value);const names=Array.from({length:count},(_,i)=>$(prefix+i).value.trim()||'Player '+(i+1));const name=prompt('Name this player group:',names.join(', '));if(!name?.trim())return;const groups=getPlayerGroups();groups.push({id:String(Date.now())+Math.random().toString(36).slice(2),type,name:name.trim().slice(0,60),names});try{localStorage.setItem(playerGroupKey,JSON.stringify(groups));refreshPlayerGroups();toast('Player group saved')}catch(e){toast('Could not save group')}}
-function loadPlayerGroup(type){const select=$(type==='Dominoes'?'dSavedGroup':'sSavedGroup');const group=getPlayerGroups().find(g=>g.id===select.value&&g.type===type);if(!group){toast('Choose a saved group');return}const count=$(type==='Dominoes'?'dCount':'sCount');count.value=String(group.names.length);buildNameInputs(type==='Dominoes'?'dNames':'sNames',group.names.length,type==='Dominoes'?'dn':'sn',group.names);toast('Group loaded')}
-refreshPlayerGroups();
 function resumeDomino(){if(domino){renderDomino();showView('dominoGame')}}
 function resumeSpades(){if(spades){renderSpades();showView('spadesGame')}}
 function startDomino(){let n=+$('dCount').value,goal=150;domino={goal,players:Array.from({length:n},(_,i)=>({name:$('dn'+i).value.trim()||`Player ${i+1}`,score:0}))};renderDomino();showView('dominoGame')}
